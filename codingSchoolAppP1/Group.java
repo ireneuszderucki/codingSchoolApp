@@ -26,11 +26,16 @@ public class Group {
 	public Group() {}
 	
 	public String toString() {
-		return "User_group name: '" + name + "'";
+		return "ID: '" + id +"'\n" + "User_group name: '" + name + "'";
 	}
 	
 	public int getId() {
 		return id;
+	}
+	
+	protected Group setId (int id) {
+		this.id = id;
+		return this;
 	}
 	
 	public String getName() {

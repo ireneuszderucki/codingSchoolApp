@@ -38,7 +38,7 @@ public class Solution {
 	public Solution() {}
 	
 	public String toString() {
-		return "Exercise: '" + exercise + "'\n" + "User: '" + user + "'\n" + "Created: '" + created + "'\n" + "Updated: '" + updated + "'\n" + "Description: '" + description + "'";
+		return "ID: '" + id + "'\n" + "Exercise: '" + exercise + "'\n" + "User: '" + user + "'\n" + "Created: '" + created + "'\n" + "Updated: '" + updated + "'\n" + "Description: '" + description + "'";
 	}
 	
 	public int getId() {
@@ -203,8 +203,8 @@ public class Solution {
 	/**
 	 * loads all solutions by exercise id, sorted from the newest to the oldest 
 	 * @param conn
-	 * @param id
-	 * @return
+	 * @param exercise id
+	 * @return Solution[] array
 	 * @throws SQLException
 	 */
 	
@@ -228,5 +228,38 @@ public class Solution {
 		uArray = sortedSolutions.toArray(uArray);
 		return uArray;
 	}
+	
+	/**
+	 * loads all solutions assigned to a specific user
+	 * @param conn
+	 * @param id
+	 * @return Solution[] array
+	 * @throws SQLException
+	 */
+	
+	static public Solution[] loadAllSolutionsByUserId(Connection conn, int id) throws SQLException {
+		ArrayList<Solution> solutions = new ArrayList<Solution>();
+		String sql = "select * from solution inner join users on users.id=solution.users_id where users.id=?";
+		PreparedStatement preStm = conn.prepareStatement(sql);
+		preStm.setInt(1, id);
+		ResultSet rs = preStm.executeQuery();
+		while (rs.next()) {
+			Solution loadedSolution = new Solution();
+			loadedSolution.setId(rs.getInt("id"));
+			loadedSolution.setExercise(rs.getInt("exercise_id"));
+			loadedSolution.setUser(rs.getInt("users_id"));
+			loadedSolution.setCreated(rs.getString("created"));
+			loadedSolution.setUpdated(rs.getString("updated"));
+			loadedSolution.setDescription(rs.getString("description"));
+			solutions.add(loadedSolution);
+		}
+		Solution[] uArray = new Solution[solutions.size()];
+		uArray = solutions.toArray(uArray);
+		return uArray;
+			
+		}
+				
+
+	
 
 }

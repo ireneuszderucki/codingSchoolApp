@@ -3,6 +3,7 @@ package codingSchoolAppP1;
 import java.sql.Connection;
 import java.sql.DriverManager;
 import java.sql.SQLException;
+import java.time.LocalDateTime;
 
 //Program 1 - zarządzanie użytkownikami
 //Program po uruchomieniu wyświetli na konsoli listę wszystkich użytkowników.
@@ -22,9 +23,15 @@ public class Main {
 	public static void main(String[] args) {
 		try (Connection conn = DriverManager.getConnection("jdbc:mysql://localhost:3306/coding_school?useSSL=false", 
 				"root", 
-				"coderslab")) {
-			UserManagement.displayAllUsers(User.loadAllUsers(conn));
-			UserManagement.optionChoice();
+				"coderslab")) 
+		{
+//			UserMgmt.optionChoice(conn);
+//			ExerciseMgmt.optionChoice(conn);
+//			GroupMgmt.optionChoice(conn);
+//			ExerciseAssign.optionChoice(conn);
+			int userId = Integer.parseInt(args[0]);
+			System.out.println(userId);
+			
 			
 		
 		

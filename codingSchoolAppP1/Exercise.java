@@ -29,11 +29,16 @@ public class Exercise {
 	public Exercise() {}
 	
 	public String toString() {
-		return "Title: '" + title + "'\n" + "Description: '" + description + "'";
+		return "ID: '" + id + "'\n" + "Title: '" + title + "'\n" + "Description: '" + description + "'";
 	}
 	
 	public int getId() {
 		return id;
+	}
+	
+	protected Exercise setId(int id) {
+		this.id = id;
+		return this;
 	}
 	
 	public String getTitle() {
@@ -73,7 +78,7 @@ public class Exercise {
 			}
 		}
 		else {
-			String sql = "UPDATE user_group SET title=?, description=? where id=?";
+			String sql = "UPDATE exercise SET title=?, description=? where id=?";
 			PreparedStatement preStm = conn.prepareStatement(sql);
 			preStm.setString(1, this.title);
 			preStm.setString(2, this.description);
@@ -137,6 +142,7 @@ public class Exercise {
 			Exercise loadedExercise = new Exercise();
 			loadedExercise.id = rs.getInt("id");
 			loadedExercise.title = rs.getString("title");
+			loadedExercise.description = rs.getString("description");
 			exercises.add(loadedExercise);			
 		}
 		Exercise[] uArray = new Exercise[exercises.size()];
@@ -172,6 +178,24 @@ public class Exercise {
 		Solution[] uArray = new Solution[solutions.size()];
 		uArray = solutions.toArray(uArray);
 		return uArray;
+	}
+	
+	static public ArrayList<Exercise> loadAllExercisesByUserId(Connection conn, int id) throws SQLException{
+		ArrayList<Exercise> exercises = new ArrayList<Exercise>();
+		String sql = 	"select * from exercise"
+						+ " inner join solution on exercise.id=solution.exercise_id"
+						+ " inner join users on solution.users_id=users.id where users.id=?";
+		PreparedStatement preStm = conn.prepareStatement(sql);
+		preStm.setInt(1, id);
+		ResultSet rs = preStm.executeQuery();
+		while(rs.next()) {
+			Exercise loadedExercise = new Exercise();
+			loadedExercise.setId(rs.getInt("exercise.id"));
+			loadedExercise.setTitle(rs.getString("title"));
+			loadedExercise.setDescription(rs.getString("description"));
+			exercises.add(loadedExercise);
+		}
+		return exercises;
 	}
 	
 }
